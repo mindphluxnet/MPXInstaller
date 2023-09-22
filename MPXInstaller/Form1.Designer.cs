@@ -71,6 +71,7 @@
             lbInstalledGames.Name = "lbInstalledGames";
             lbInstalledGames.Size = new Size(244, 403);
             lbInstalledGames.TabIndex = 1;
+            lbInstalledGames.Click += lbInstalledGames_Click;
             // 
             // groupBox1
             // 
