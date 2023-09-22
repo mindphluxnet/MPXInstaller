@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33829.357
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MPXInstaller", "MPXInstaller\MPXInstaller.csproj", "{78A0FC88-B269-464B-94A4-1DA4FF923664}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{78A0FC88-B269-464B-94A4-1DA4FF923664}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78A0FC88-B269-464B-94A4-1DA4FF923664}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78A0FC88-B269-464B-94A4-1DA4FF923664}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78A0FC88-B269-464B-94A4-1DA4FF923664}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {68DD5007-D00E-44B7-B3A4-CCA942A8A37A}
+	EndGlobalSection
+EndGlobal
