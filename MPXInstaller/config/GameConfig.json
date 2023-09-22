@@ -1,0 +1,12 @@
+[
+  {
+    "name": "Tale of Toast",
+    "RepoURL": "https://github.com/mindphluxnet/TaleOfToastPlugin",
+    "InstallPath": "Tale of Toast"
+  },
+  {
+    "name": "Gangster coin pusher",
+    "RepoURL": "https://github.com/mindphluxnet/GangsterCoinPusherPlugin",
+    "InstallPath": "GangsterCoinPusher"
+  }
+]
