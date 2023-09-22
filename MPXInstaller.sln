@@ -5,6 +5,11 @@ VisualStudioVersion = 17.6.33829.357
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MPXInstaller", "MPXInstaller\MPXInstaller.csproj", "{78A0FC88-B269-464B-94A4-1DA4FF923664}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "config", "config", "{AA89CCEE-0D7C-4B8F-855A-8AC53165C8BD}"
+	ProjectSection(SolutionItems) = preProject
+		GameConfig.json = GameConfig.json
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
