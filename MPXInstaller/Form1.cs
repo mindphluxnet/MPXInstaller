@@ -7,7 +7,8 @@ namespace MPXInstaller
     public partial class frmMain : Form
     {
         private string steamPath = "";
-        private static readonly string configFileUrl = "https://raw.githubusercontent.com/mindphluxnet/MPXInstaller/master/MPXInstaller/config/GameConfig.json";
+        private static readonly string configFileUrl =
+            "https://raw.githubusercontent.com/mindphluxnet/MPXInstaller/master/MPXInstaller/config/GameConfig.json";
         private List<GameConfig> gameConfigs = new List<GameConfig>();
 
         public frmMain()
@@ -37,7 +38,18 @@ namespace MPXInstaller
             }
         }
 
-        private bool IsGameInstalled(GameConfig gameConfig) => Directory.Exists(Path.Combine(steamPath, "steamapps", "common", gameConfig.InstallPath, gameConfig.SubDir));
+        private bool IsGameInstalled(GameConfig gameConfig)
+        {
+            return Directory.Exists(
+                Path.Combine(
+                    steamPath,
+                    "steamapps",
+                    "common",
+                    gameConfig.InstallPath,
+                    gameConfig.SubDir == null ? "" : gameConfig.SubDir
+                )
+            );
+        }
 
         private string? GetSteamPath()
         {
@@ -46,7 +58,6 @@ namespace MPXInstaller
 
             if (_key != null)
             {
-
                 try
                 {
                     string? steamPath = (string)_key.GetValue("SteamPath");
@@ -63,9 +74,14 @@ namespace MPXInstaller
             return null;
         }
 
-        private GameConfig GetGameConfigByName(string name) => gameConfigs.Find(x => x.Name == name);
+        private GameConfig GetGameConfigByName(string name) =>
+            gameConfigs.Find(x => x.Name == name);
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Member als statisch markieren", Justification = "<Ausstehend>")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage(
+            "Performance",
+            "CA1822:Member als statisch markieren",
+            Justification = "<Ausstehend>"
+        )]
         private async Task<List<GameConfig>> FetchSupportedGames()
         {
             try
@@ -80,7 +96,12 @@ namespace MPXInstaller
                     }
                     else
                     {
-                        MessageBox.Show("Unable to download configuration file. Please try again later!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(
+                            "Unable to download configuration file. Please try again later!",
+                            "Error",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Error
+                        );
                         Application.Exit();
                         return null;
                     }
@@ -88,7 +109,12 @@ namespace MPXInstaller
             }
             catch (Exception)
             {
-                MessageBox.Show("Unable to download configuration file. Please try again later!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(
+                    "Unable to download configuration file. Please try again later!",
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
                 Application.Exit();
                 return null;
             }
@@ -97,25 +123,48 @@ namespace MPXInstaller
         private void lbInstalledGames_Click(object sender, EventArgs e)
         {
             ListBox lb = (ListBox)sender;
+            if (lb.SelectedItem == null) return;
             UpdateDisplay(lb.SelectedItem.ToString());
         }
 
         private void UpdateDisplay(string name)
         {
             tbModFeatures.Clear();
-            btnInstall.Enabled = !IsModInstalled(name);
             btnInstall.Text = IsModInstalled(name) ? "Uninstall" : "Install";
         }
 
         private bool IsModInstalled(string name)
         {
             GameConfig _cfg = GetGameConfigByName(name);
-            if(IsGameInstalled(_cfg))
-            {                
-                if(File.Exists(Path.Combine(steamPath, "steamapps", "common", _cfg.InstallPath, "mod.json")))
+            if (IsGameInstalled(_cfg))
+            {
+                if (
+                    File.Exists(
+                        Path.Combine(
+                            steamPath,
+                            "steamapps",
+                            "common",
+                            _cfg.InstallPath,
+                            _cfg.SubDir == null ? "" : _cfg.SubDir,
+                            "mod.json"
+                        )
+                    )
+                )
                 {
-                    ModConfig? mc = JsonConvert.DeserializeObject<ModConfig>(Path.Combine(steamPath, "steamapps", "common", _cfg.InstallPath, _cfg.SubDir, "mod.json"));
-                    if (mc != null) return true;
+                    ModConfig? mc = JsonConvert.DeserializeObject<ModConfig>(
+                        File.ReadAllText(
+                            Path.Combine(
+                                steamPath,
+                                "steamapps",
+                                "common",
+                                _cfg.InstallPath,
+                                _cfg.SubDir == null ? "" : _cfg.SubDir,
+                                "mod.json"
+                            )
+                        )
+                    );
+                    if (mc != null)
+                        return true;
                 }
             }
             return false;
