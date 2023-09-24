@@ -32,14 +32,13 @@
             ModConfig config = frmMain.GetModConfig(frmMain.selectedGame);
             bool hasErrors = false;
 
-            tbActivityLog.Text +=
-                $"Uninstalling mod for {frmMain.selectedGame.Name} ...{Environment.NewLine}";
+            LogLine($"Uninstalling mod for {frmMain.selectedGame.Name} ...");
 
             foreach (string f in config.UninstallFiles.Directories)
             {
                 try
                 {
-                    tbActivityLog.Text += $"Deleting directory {f} ...{Environment.NewLine}";
+                    LogLine($"Deleting directory {f} ...");
                     Directory.Delete(
                         Path.Combine(frmMain.GetGameDirectory(frmMain.selectedGame), f),
                         true
@@ -47,8 +46,7 @@
                 }
                 catch (Exception ex)
                 {
-                    tbActivityLog.Text +=
-                        $"Error deleting directory: {ex.Message}{Environment.NewLine}";
+                    LogLine($"Error deleting directory: {ex.Message}");
                     hasErrors = true;
                 }
             }
@@ -57,26 +55,26 @@
             {
                 try
                 {
-                    tbActivityLog.Text += $"Deleting file {f} ...{Environment.NewLine}";
+                    LogLine($"Deleting file {f} ...");
                     File.Delete(Path.Combine(frmMain.GetGameDirectory(frmMain.selectedGame), f));
                 }
                 catch (Exception ex)
                 {
-                    tbActivityLog.Text += $"Error deleting file: {ex.Message}{Environment.NewLine}";
+                    LogLine($"Error deleting file: {ex.Message}");
                     hasErrors = true;
                 }
             }
 
             try
             {
-                tbActivityLog.Text += $"Deleting file mod.json ... {Environment.NewLine}";
+                LogLine($"Deleting file mod.json ...");
                 File.Delete(
                     Path.Combine(frmMain.GetGameDirectory(frmMain.selectedGame), "mod.json")
                 );
             }
             catch (Exception ex)
             {
-                tbActivityLog.Text += $"Error deleting file: {ex.Message}{Environment.NewLine}";
+                LogLine($"Error deleting file: {ex.Message}");
                 hasErrors = true;
             }
 
@@ -87,6 +85,11 @@
         }
 
         private void UpdateMod() { }
+
+        private void LogLine(string msg)
+        {
+            tbActivityLog.Text += msg + Environment.NewLine;
+        }
     }
 
     public enum InstallerActivity
