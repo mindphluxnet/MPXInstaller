@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MPXInstaller
 {
-    internal struct GameConfig
+    public struct GameConfig
     {
         public string Name { get; set; }
         public string RepoURL { get; set; }

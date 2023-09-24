@@ -35,6 +35,7 @@
             groupBox1 = new GroupBox();
             tbModFeatures = new TextBox();
             btnInstall = new Button();
+            btnUpdate = new Button();
             statusStrip1.SuspendLayout();
             groupBox1.SuspendLayout();
             SuspendLayout();
@@ -100,12 +101,25 @@
             btnInstall.TabIndex = 3;
             btnInstall.Text = "Install";
             btnInstall.UseVisualStyleBackColor = true;
+            btnInstall.Click += btnInstall_Click;
+            // 
+            // btnUpdate
+            // 
+            btnUpdate.Location = new Point(568, 378);
+            btnUpdate.Name = "btnUpdate";
+            btnUpdate.Size = new Size(104, 37);
+            btnUpdate.TabIndex = 4;
+            btnUpdate.Text = "Update";
+            btnUpdate.UseVisualStyleBackColor = true;
+            btnUpdate.Visible = false;
+            btnUpdate.Click += btnUpdate_Click;
             // 
             // frmMain
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(btnUpdate);
             Controls.Add(btnInstall);
             Controls.Add(groupBox1);
             Controls.Add(lbInstalledGames);
@@ -134,5 +148,6 @@
         private GroupBox groupBox1;
         private TextBox tbModFeatures;
         private Button btnInstall;
+        private Button btnUpdate;
     }
 }

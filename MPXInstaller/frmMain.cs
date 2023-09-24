@@ -1,15 +1,15 @@
 using Microsoft.Win32;
 using Newtonsoft.Json;
-using System.Text.Json.Serialization;
 
 namespace MPXInstaller
 {
     public partial class frmMain : Form
     {
-        private string steamPath = "";
+        public static string steamPath = "";
         private static readonly string configFileUrl =
             "https://raw.githubusercontent.com/mindphluxnet/MPXInstaller/master/MPXInstaller/config/GameConfig.json";
         private List<GameConfig> gameConfigs = new List<GameConfig>();
+        public static GameConfig selectedGame;
 
         public frmMain()
         {
@@ -34,7 +34,13 @@ namespace MPXInstaller
             }
             else
             {
-                // No steam installed, where is it?
+                MessageBox.Show(
+                    "Steam does not seem to be installed correctly!",
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
+                Application.Exit();
             }
         }
 
@@ -103,7 +109,7 @@ namespace MPXInstaller
                             MessageBoxIcon.Error
                         );
                         Application.Exit();
-                        return null;
+                        return new();
                     }
                 }
             }
@@ -116,14 +122,15 @@ namespace MPXInstaller
                     MessageBoxIcon.Error
                 );
                 Application.Exit();
-                return null;
+                return new();
             }
         }
 
         private void lbInstalledGames_Click(object sender, EventArgs e)
         {
             ListBox lb = (ListBox)sender;
-            if (lb.SelectedItem == null) return;
+            if (lb.SelectedItem == null)
+                return;
             UpdateDisplay(lb.SelectedItem.ToString());
         }
 
@@ -131,6 +138,32 @@ namespace MPXInstaller
         {
             tbModFeatures.Clear();
             btnInstall.Text = IsModInstalled(name) ? "Uninstall" : "Install";
+            selectedGame = GetGameConfigByName(name);
+            ModConfig _cfg = GetModConfig(selectedGame);
+            tbModFeatures.AppendText(_cfg.FeatureLog);
+            btnUpdate.Visible = _cfg.Version < selectedGame.Version;
+        }
+
+        public static ModConfig GetModConfig(GameConfig config)
+        {
+            ModConfig mc = JsonConvert.DeserializeObject<ModConfig>(
+                File.ReadAllText(
+                    Path.Combine(
+                        steamPath,
+                        "steamapps",
+                        "common",
+                        config.InstallPath,
+                        config.SubDir == null ? "" : config.SubDir,
+                        "mod.json"
+                    )
+                )
+            );
+            return mc;
+        }
+
+        public static string GetGameDirectory(GameConfig config)
+        {
+            return Path.Combine(steamPath, "steamapps", "common", config.InstallPath, config.SubDir == null ? "" : config.SubDir);
         }
 
         private bool IsModInstalled(string name)
@@ -168,6 +201,45 @@ namespace MPXInstaller
                 }
             }
             return false;
+        }
+
+        private void btnUpdate_Click(object sender, EventArgs e)
+        {
+            UpdateMod();
+        }
+
+        private void btnInstall_Click(object sender, EventArgs e)
+        {
+            if(IsModInstalled(selectedGame.Name))
+            {
+                UninstallMod();
+            }
+            else
+            {
+                InstallMod();
+            }
+        }
+
+        private void InstallMod()
+        {
+            frmActivity frmActivity = new frmActivity();
+            frmActivity.Activity = InstallerActivity.Install;
+            frmActivity.ShowDialog();
+        }
+
+        private void UninstallMod()
+        {
+            frmActivity frmActivity = new frmActivity();
+            frmActivity.Activity = InstallerActivity.Uninstall;
+            frmActivity.ShowDialog();
+            UpdateDisplay(selectedGame.Name);
+        }
+
+        private void UpdateMod()
+        {
+            frmActivity frmActivity = new frmActivity();
+            frmActivity.Activity = InstallerActivity.Update;
+            frmActivity.ShowDialog();
         }
     }
 }
