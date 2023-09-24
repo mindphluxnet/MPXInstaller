@@ -1,15 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-
-namespace MPXInstaller
+﻿namespace MPXInstaller
 {
     public partial class frmActivity : Form
     {
@@ -43,18 +32,23 @@ namespace MPXInstaller
             ModConfig config = frmMain.GetModConfig(frmMain.selectedGame);
             bool hasErrors = false;
 
-            tbActivityLog.Text += $"Uninstalling mod for {frmMain.selectedGame.Name} ...{Environment.NewLine}";
+            tbActivityLog.Text +=
+                $"Uninstalling mod for {frmMain.selectedGame.Name} ...{Environment.NewLine}";
 
             foreach (string f in config.UninstallFiles.Directories)
             {
                 try
                 {
                     tbActivityLog.Text += $"Deleting directory {f} ...{Environment.NewLine}";
-                    Directory.Delete(Path.Combine(frmMain.GetGameDirectory(frmMain.selectedGame), f), true);
+                    Directory.Delete(
+                        Path.Combine(frmMain.GetGameDirectory(frmMain.selectedGame), f),
+                        true
+                    );
                 }
                 catch (Exception ex)
                 {
-                    tbActivityLog.Text += $"Error deleting directory: {ex.Message}{Environment.NewLine}";
+                    tbActivityLog.Text +=
+                        $"Error deleting directory: {ex.Message}{Environment.NewLine}";
                     hasErrors = true;
                 }
             }
@@ -76,16 +70,20 @@ namespace MPXInstaller
             try
             {
                 tbActivityLog.Text += $"Deleting file mod.json ... {Environment.NewLine}";
-                File.Delete(Path.Combine(frmMain.GetGameDirectory(frmMain.selectedGame), "mod.json"));
+                File.Delete(
+                    Path.Combine(frmMain.GetGameDirectory(frmMain.selectedGame), "mod.json")
+                );
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 tbActivityLog.Text += $"Error deleting file: {ex.Message}{Environment.NewLine}";
                 hasErrors = true;
             }
 
             btnClose.Enabled = true;
-            tbActivityLog.Text += hasErrors ? "Uninstall completed with errors, see above." : "Uninstall completed successfully.";
+            tbActivityLog.Text += hasErrors
+                ? "Uninstall completed with errors, see above."
+                : "Uninstall completed successfully.";
         }
 
         private void UpdateMod() { }
