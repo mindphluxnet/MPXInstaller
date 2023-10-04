@@ -1,23 +1,26 @@
 [
   {
     "name": "Tale of Toast",
-    "RepoURL": "https://github.com/mindphluxnet/TaleOfToastPlugin",
+    "RepoName": "TaleOfToastPlugin",
     "InstallPath": "Tale of Toast",
     "SubDir": "",
-    "Version": 1
+    "Version": 1,
+    "SteamID": 640150
   },
   {
     "name": "Gangster coin pusher",
-    "RepoURL": "https://github.com/mindphluxnet/GangsterCoinPusherPlugin",
+    "RepoName": "GangsterCoinPusherPlugin",
     "InstallPath": "GangsterCoinPusher",
     "SubDir": "GangsterCoinPusher",
-    "Version": 1
+    "Version": 1,
+    "SteamID": 1333300
   },
   {
     "name": "Empire of Empires",
-    "RepoURL": "https://github.com/mindphluxnet/EmpireOfEmpiresPlugin",
+    "RepoName": "EmpireOfEmpiresPlugin",
     "InstallPath": "Empire of Empires",
     "SubDir": "",
-    "Version": 1
+    "Version": 1,
+    "SteamID": "2082730"
   }
 ]

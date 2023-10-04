@@ -1,4 +1,8 @@
-﻿namespace MPXInstaller
+﻿using Newtonsoft.Json;
+using System.IO.Compression;
+using System.Net.Http;
+
+namespace MPXInstaller
 {
     public partial class frmActivity : Form
     {
@@ -25,7 +29,72 @@
             }
         }
 
-        private void InstallMod() { }
+        private async void InstallMod() 
+        {
+            string dlUrl = await GetDownloadUrl();
+            if (dlUrl != "")
+            {
+                LogLine("Downloading mod installation archive ...");
+                using (HttpClient httpClient = new HttpClient())
+                {
+                    using (HttpResponseMessage response = await httpClient.GetAsync(dlUrl, HttpCompletionOption.ResponseHeadersRead))
+                    {
+                        response.EnsureSuccessStatusCode();
+
+                        using (Stream contentStream = await response.Content.ReadAsStreamAsync())
+                        {
+                            using (FileStream fileStream = File.Create(Path.Combine(Application.LocalUserAppDataPath, "mpxdownload.zip")))
+                            {
+                                await contentStream.CopyToAsync(fileStream);
+                                fileStream.Close();
+                            }
+                        }
+                    }
+                }
+
+                if(File.Exists(Path.Combine(Application.LocalUserAppDataPath, "mpxdownload.zip")))
+                {
+                    LogLine("Installing mod ...");
+                    ZipFile.ExtractToDirectory(Path.Combine(Application.LocalUserAppDataPath, "mpxdownload.zip"), frmMain.GetGameDirectory(frmMain.selectedGame), true);
+                    File.Delete(Path.Combine(Application.LocalUserAppDataPath, "mpxdownload.zip"));
+                }
+            }
+            else
+            {
+                LogLine("Could not install mod, please try again later!");
+            }
+        }
+
+        private async Task<string> GetDownloadUrl() 
+        {
+            string apiUrl = $"https://api.github.com/repos/mindphluxnet/{frmMain.selectedGame.RepoName}/releases/latest";
+
+            try
+            {
+                using (HttpClient client = new())
+                {
+                    HttpResponseMessage response = await client.GetAsync(apiUrl);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string jsonContent = await response.Content.ReadAsStringAsync();
+                        GithubAPIResponse apiResponse = JsonConvert.DeserializeObject<GithubAPIResponse>(jsonContent);
+                        return apiResponse.assets[0].browser_download_url;
+                    }
+                    else
+                    {
+                        LogLine("Error getting Github API response!");
+                        return "";
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                LogLine("Error getting Github API response!");
+                return "";
+            }
+
+
+        }
 
         private void UninstallMod()
         {

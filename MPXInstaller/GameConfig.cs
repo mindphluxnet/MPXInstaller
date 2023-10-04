@@ -9,9 +9,10 @@ namespace MPXInstaller
     public struct GameConfig
     {
         public string Name { get; set; }
-        public string RepoURL { get; set; }
+        public string RepoName { get; set; }
         public string InstallPath { get; set; }
         public string SubDir { get; set; }
         public int Version { get; set; }
+        public int SteamID { get; set; }
     }
 }

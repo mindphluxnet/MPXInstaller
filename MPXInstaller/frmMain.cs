@@ -57,6 +57,17 @@ namespace MPXInstaller
             );
         }
 
+        private bool IsGameRunning(GameConfig gameConfig)
+        {
+            string path = @"Software\Valve\Steam\Apps\" + gameConfig.SteamID.ToString();
+            RegistryKey _key = Registry.CurrentUser.OpenSubKey(path);
+            if (_key != null)
+            {
+                return (int)_key.GetValue("Running", 0) == 1;
+            }
+            return false;
+        }
+
         private string? GetSteamPath()
         {
             string path = @"Software\Valve\Steam";
@@ -222,24 +233,45 @@ namespace MPXInstaller
 
         private void InstallMod()
         {
-            frmActivity frmActivity = new frmActivity();
-            frmActivity.Activity = InstallerActivity.Install;
-            frmActivity.ShowDialog();
+            if (!IsGameRunning(selectedGame))
+            {
+                frmActivity frmActivity = new frmActivity();
+                frmActivity.Activity = InstallerActivity.Install;
+                frmActivity.ShowDialog();
+            }
+            else
+            {
+                MessageBox.Show($"Can't install mod; {selectedGame.Name} is currently running!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void UninstallMod()
         {
-            frmActivity frmActivity = new frmActivity();
-            frmActivity.Activity = InstallerActivity.Uninstall;
-            frmActivity.ShowDialog();
-            UpdateDisplay(selectedGame.Name);
+            if (!IsGameRunning(selectedGame))
+            {
+                frmActivity frmActivity = new frmActivity();
+                frmActivity.Activity = InstallerActivity.Uninstall;
+                frmActivity.ShowDialog();
+                UpdateDisplay(selectedGame.Name);
+            }
+            else
+            {
+                MessageBox.Show($"Can't uninstall mod; {selectedGame.Name} is currently running!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void UpdateMod()
         {
-            frmActivity frmActivity = new frmActivity();
-            frmActivity.Activity = InstallerActivity.Update;
-            frmActivity.ShowDialog();
+            if (!IsGameRunning(selectedGame))
+            {
+                frmActivity frmActivity = new frmActivity();
+                frmActivity.Activity = InstallerActivity.Update;
+                frmActivity.ShowDialog();
+            }
+            else
+            {
+                MessageBox.Show($"Can't update mod; {selectedGame.Name} is currently running!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }
